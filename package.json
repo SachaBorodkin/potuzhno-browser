@@ -1,0 +1,12 @@
+{
+  "name": "potuzhno-browser",
+  "version": "1.0.0",
+  "description": "Potuzhno Browser - built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^29.0.0"
+  }
+}

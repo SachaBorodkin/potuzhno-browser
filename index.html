@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css">
+  <title>Potuzhno Browser</title>
+</head>
+<body>
+
+  <!-- TITLE BAR + TABS -->
+  <div id="titlebar">
+    <div class="traffic-lights">
+      <div class="tl red"></div>
+      <div class="tl yellow"></div>
+      <div class="tl green"></div>
+    </div>
+    <div id="tabs-container"></div>
+    <button id="new-tab-btn" onclick="newTab()">+</button>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div id="toolbar">
+    <button id="back">&#9664;</button>
+    <button id="forward">&#9654;</button>
+    <button id="reload">&#8635;</button>
+    <div id="urlbar-wrap">
+      <span id="lock-icon">&#128274;</span>
+      <input id="urlbar" type="text" placeholder="Search or enter URL..." />
+    </div>
+    <button id="history-toggle" onclick="toggleHistory()">&#128336;</button>
+    <button id="bookmark-btn">&#9733;</button>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div id="main">
+    <div id="webviews"></div>
+
+    <!-- HISTORY PANEL -->
+    <div id="history-panel" class="closed">
+      <div id="history-header">
+        <span>History</span>
+        <span id="history-close" onclick="toggleHistory()">&#10005;</span>
+      </div>
+      <div id="history-list"></div>
+      <div id="history-footer">
+        <button id="clear-history" onclick="clearHistory()">Clear history</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div id="statusbar">
+    <span id="status-text">Ready</span>
+    <span>Potuzhno Browser v1.0</span>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
