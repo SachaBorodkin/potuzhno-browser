@@ -1,12 +1,43 @@
 {
   "name": "potuzhno-browser",
   "version": "2.1.0",
-  "description": "Potuzhno Browser",
+  "description": "Potuzhno Browser - A lightweight, fast web browser",
   "main": "main.js",
+  "author": "Potuzhno",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win --publish never",
+    "dist": "npm run build:win"
   },
   "devDependencies": {
-    "electron": "^29.0.0"
+    "electron": "^29.0.0",
+    "electron-builder": "^23.6.0"
+  },
+  "build": {
+    "appId": "com.potuzhno.browser",
+    "productName": "Potuzhno Browser",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "newtab.html",
+      "styles.css",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Potuzhno Browser"
+    }
   }
 }
