@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Potuzhno Browser — New Tab</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
     <style>
       *,
       *::before,
@@ -19,14 +15,14 @@
 
       html,
       body {
+        width: 100%;
         height: 100%;
         font-family: "DM Sans", sans-serif;
         overflow: hidden;
       }
 
       body {
-        background:
-          radial-gradient(
+        background: radial-gradient(
             ellipse at 20% 80%,
             rgba(245, 208, 0, 0.28) 0%,
             transparent 50%
@@ -83,117 +79,48 @@
       .page {
         position: relative;
         z-index: 1;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 0;
-        gap: 0;
-      }
-
-      /* Clock */
-      #clock {
-        display: none;
-      }
-
-      #date-label {
-        display: none;
-      }
-
-      /* Logo */
-      .logo-wrap {
-        position: absolute;
-        top: 40px;
-        left: 40px;
-        margin-bottom: 0;
-        animation: fadeUp 0.5s 0.16s ease both;
-        user-select: none;
-      }
-
-      .logo-text {
-        font-family: "Unbounded", sans-serif;
-        font-size: clamp(1.2rem, 3vw, 2rem);
-        font-weight: 900;
-        letter-spacing: -1px;
-        line-height: 1;
-      }
-      .logo-text span:nth-child(1) {
-        color: #1a5fa8;
-      }
-      .logo-text span:nth-child(2) {
-        color: #e8a000;
-      }
-      .logo-text span:nth-child(3) {
-        color: #1a5fa8;
-      }
-      .logo-text span:nth-child(4) {
-        color: #34a853;
-      }
-      .logo-text span:nth-child(5) {
-        color: #1a5fa8;
-      }
-      .logo-text span:nth-child(6) {
-        color: #ea4335;
-      }
-      .logo-text span:nth-child(7) {
-        color: #e8a000;
-      }
-      .logo-text span:nth-child(8) {
-        color: #1a5fa8;
-      }
-
-      .logo-badge {
-        font-family: "DM Sans", sans-serif;
-        font-size: 0.5rem;
-        font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #fff;
-        background: #1a5fa8;
-        padding: 2px 6px;
-        border-radius: 20px;
-        margin-left: 8px;
-        align-self: flex-start;
-        margin-top: 4px;
       }
 
       /* Search bar */
       .search-container {
         width: 100%;
-        max-width: 1000px;
+        height: auto;
         padding: 0 2rem;
-        animation: fadeUp 0.5s 0.24s ease both;
-        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .search-box {
         display: flex;
         align-items: center;
-        background: rgba(255, 255, 255, 0.92);
-        border: 2px solid transparent;
+        background: rgba(255, 255, 255, 0.93);
+        border: none;
         border-radius: 50px;
-        padding: 0 32px;
+        padding: 0 36px;
         gap: 16px;
-        height: 80px;
+        height: 90px;
         width: 100%;
-        box-shadow:
-          0 8px 32px rgba(26, 95, 168, 0.18),
-          0 2px 8px rgba(0, 0, 0, 0.08);
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s,
-          background 0.2s;
+        max-width: 1200px;
+        box-shadow: 0 10px 40px rgba(26, 95, 168, 0.2);
+        transition: all 0.3s ease;
       }
       .search-box:focus-within {
-        border-color: #5b9bd5;
         background: rgba(255, 255, 255, 0.99);
-        box-shadow: 0 12px 48px rgba(26, 95, 168, 0.32);
+        box-shadow: 0 16px 56px rgba(26, 95, 168, 0.35);
+        transform: scale(1.01);
       }
 
       .search-icon {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         flex-shrink: 0;
         color: #8a9ab8;
       }
@@ -203,107 +130,12 @@
         border: none;
         outline: none;
         font-family: "DM Sans", sans-serif;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         color: #1a2a4a;
         background: transparent;
       }
       #search-input::placeholder {
-        color: #b0bdd4;
-      }
-
-      /* Search buttons */
-      .search-btns {
-        display: none;
-        gap: 10px;
-        justify-content: center;
-        animation: fadeUp 0.5s 0.3s ease both;
-        margin-bottom: 2.4rem;
-      }
-
-      .search-btn {
-        border: none;
-        border-radius: 50px;
-        padding: 9px 22px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 0.88rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition:
-          opacity 0.15s,
-          transform 0.15s;
-        white-space: nowrap;
-      }
-      .search-btn:hover {
-        opacity: 0.88;
-        transform: scale(1.03);
-      }
-      .search-btn:active {
-        transform: scale(0.97);
-      }
-      .btn-blue {
-        background: linear-gradient(135deg, #1a5fa8, #5b9bd5);
-        color: #fff;
-        box-shadow: 0 2px 8px rgba(26, 95, 168, 0.25);
-      }
-      .btn-yellow {
-        background: linear-gradient(135deg, #d4a800, #f5d000);
-        color: #1a2a00;
-        box-shadow: 0 2px 8px rgba(212, 168, 0, 0.3);
-      }
-      .btn-blue:hover {
-        box-shadow: 0 4px 16px rgba(26, 95, 168, 0.4);
-      }
-      .btn-yellow:hover {
-        box-shadow: 0 4px 16px rgba(212, 168, 0, 0.5);
-      }
-
-      /* Quick links */
-      .shortcuts {
-        display: none;
-        gap: 18px;
-        flex-wrap: wrap;
-        justify-content: center;
-        max-width: 800px;
-        animation: fadeUp 0.5s 0.36s ease both;
-      }
-
-      .shortcut {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 7px;
-        cursor: pointer;
-        text-decoration: none;
-        transition:
-          transform 0.18s,
-          filter 0.18s;
-      }
-      .shortcut:hover {
-        transform: translateY(-8px);
-        filter: brightness(1.1);
-      }
-
-      .shortcut-icon {
-        width: 54px;
-        height: 54px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.82);
-        box-shadow: 0 2px 12px rgba(26, 95, 168, 0.11);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        transition: all 0.18s;
-      }
-      .shortcut:hover .shortcut-icon {
-        background: rgba(255, 255, 255, 0.97);
-        box-shadow: 0 8px 28px rgba(26, 95, 168, 0.25);
-        transform: rotate(5deg) scale(1.08);
-      }
-      .shortcut-label {
-        font-size: 0.72rem;
-        color: #6b7a9a;
-        font-weight: 400;
+        color: #c0cce0;
       }
 
       /* Footer */
@@ -312,10 +144,10 @@
         bottom: 20px;
         left: 0;
         right: 0;
-        font-size: 0.8rem;
-        color: #a0aec0;
-        letter-spacing: 0.04em;
+        font-size: 0.75rem;
+        color: #7a8db8;
         text-align: center;
+        letter-spacing: 0.04em;
       }
       .footer span {
         color: #5b9bd5;
@@ -339,17 +171,6 @@
     <div class="orb orb-2"></div>
 
     <div class="page">
-      <div id="clock">00:00</div>
-      <div id="date-label">Wednesday</div>
-
-      <div class="logo-wrap">
-        <div class="logo-text">
-          <span>P</span><span>o</span><span>t</span><span>u</span><span>z</span
-          ><span>h</span><span>n</span><span>o</span>
-        </div>
-        <div class="logo-badge">Browser</div>
-      </div>
-
       <div class="search-container">
         <div class="search-box">
           <svg
@@ -372,58 +193,6 @@
           />
         </div>
       </div>
-
-      <div class="search-btns">
-        <button class="search-btn btn-blue" onclick="doSearch()">
-          🔍 Search
-        </button>
-        <button class="search-btn btn-yellow" onclick="doLucky()">
-          🍀 Lucky
-        </button>
-      </div>
-
-      <div class="shortcuts">
-        <a class="shortcut" href="https://youtube.com" target="_blank">
-          <div class="shortcut-icon">▶️</div>
-          <span class="shortcut-label">YouTube</span>
-        </a>
-        <a class="shortcut" href="https://github.com" target="_blank">
-          <div class="shortcut-icon">🐙</div>
-          <span class="shortcut-label">GitHub</span>
-        </a>
-        <a class="shortcut" href="https://gmail.com" target="_blank">
-          <div class="shortcut-icon">✉️</div>
-          <span class="shortcut-label">Gmail</span>
-        </a>
-        <a class="shortcut" href="https://twitter.com" target="_blank">
-          <div class="shortcut-icon">𝕏</div>
-          <span class="shortcut-label">Twitter</span>
-        </a>
-        <a class="shortcut" href="https://reddit.com" target="_blank">
-          <div class="shortcut-icon">🟠</div>
-          <span class="shortcut-label">Reddit</span>
-        </a>
-        <a class="shortcut" href="https://stackoverflow.com" target="_blank">
-          <div class="shortcut-icon">💻</div>
-          <span class="shortcut-label">Stack Overflow</span>
-        </a>
-        <a class="shortcut" href="https://wikipedia.org" target="_blank">
-          <div class="shortcut-icon">📖</div>
-          <span class="shortcut-label">Wikipedia</span>
-        </a>
-        <a class="shortcut" href="https://twitch.tv" target="_blank">
-          <div class="shortcut-icon">🎮</div>
-          <span class="shortcut-label">Twitch</span>
-        </a>
-        <a class="shortcut" href="https://weather.com" target="_blank">
-          <div class="shortcut-icon">🌦️</div>
-          <span class="shortcut-label">Weather</span>
-        </a>
-        <a class="shortcut" href="https://news.ycombinator.com" target="_blank">
-          <div class="shortcut-icon">📰</div>
-          <span class="shortcut-label">HackerNews</span>
-        </a>
-      </div>
     </div>
 
     <div class="footer">
@@ -431,45 +200,6 @@
     </div>
 
     <script>
-      // Clock
-      function updateClock() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, "0");
-        const m = String(now.getMinutes()).padStart(2, "0");
-        document.getElementById("clock").textContent = h + ":" + m;
-        const days = [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ];
-        const months = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-        document.getElementById("date-label").textContent =
-          days[now.getDay()] +
-          ", " +
-          months[now.getMonth()] +
-          " " +
-          now.getDate();
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
-
       // Search
       function doSearch() {
         const q = document.getElementById("search-input").value.trim();
@@ -487,15 +217,6 @@
         }
         window.location.href =
           "https://www.google.com/search?q=" + encodeURIComponent(q);
-      }
-
-      function doLucky() {
-        const q = document.getElementById("search-input").value.trim();
-        if (!q) return;
-        window.location.href =
-          "https://www.google.com/search?q=" +
-          encodeURIComponent(q) +
-          "&btnI=1";
       }
 
       document
