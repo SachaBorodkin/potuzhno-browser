@@ -1,300 +1,520 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Potuzhno Browser — New Tab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html, body {
-      height: 100%;
-      font-family: 'DM Sans', sans-serif;
-      overflow: hidden;
-    }
-
-    body {
-      background: radial-gradient(ellipse at 20% 80%, rgba(245,208,0,0.28) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 10%, rgba(26,95,168,0.22) 0%, transparent 55%),
-                  radial-gradient(ellipse at 50% 50%, rgba(91,155,213,0.12) 0%, transparent 70%),
-                  linear-gradient(160deg, #ddeeff 0%, #c8dffa 30%, #f0e8b0 70%, #f5e060 100%);
-    }
-
-    /* Decorative orbs */
-    .orb {
-      position: fixed; border-radius: 50%;
-      pointer-events: none; z-index: 0;
-    }
-    .orb-1 {
-      width: 420px; height: 420px; top: -120px; right: -100px;
-      background: radial-gradient(circle, rgba(26,95,168,0.16), transparent 70%);
-    }
-    .orb-2 {
-      width: 340px; height: 340px; bottom: -80px; left: -80px;
-      background: radial-gradient(circle, rgba(245,208,0,0.26), transparent 70%);
-    }
-
-    .page {
-      position: relative; z-index: 1;
-      height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 1rem;
-      gap: 0;
-    }
-
-    /* Clock */
-    #clock {
-      font-family: 'Unbounded', sans-serif;
-      font-size: clamp(3.5rem, 9vw, 6.5rem);
-      font-weight: 700;
-      letter-spacing: -3px;
-      color: #1a5fa8;
-      line-height: 1;
-      margin-bottom: 0.25rem;
-      animation: fadeUp 0.5s ease both;
-    }
-
-    #date-label {
-      font-size: 0.9rem;
-      color: #6b7a9a;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 2.2rem;
-      animation: fadeUp 0.5s 0.08s ease both;
-    }
-
-    /* Logo */
-    .logo-wrap {
-      display: flex; align-items: center; gap: 0;
-      margin-bottom: 1.8rem;
-      animation: fadeUp 0.5s 0.16s ease both;
-      user-select: none;
-    }
-
-    .logo-text {
-      font-family: 'Unbounded', sans-serif;
-      font-size: clamp(2.2rem, 5.5vw, 4rem);
-      font-weight: 900;
-      letter-spacing: -2px;
-      line-height: 1;
-    }
-    .logo-text span:nth-child(1) { color: #1a5fa8; }
-    .logo-text span:nth-child(2) { color: #e8a000; }
-    .logo-text span:nth-child(3) { color: #1a5fa8; }
-    .logo-text span:nth-child(4) { color: #34a853; }
-    .logo-text span:nth-child(5) { color: #1a5fa8; }
-    .logo-text span:nth-child(6) { color: #ea4335; }
-    .logo-text span:nth-child(7) { color: #e8a000; }
-    .logo-text span:nth-child(8) { color: #1a5fa8; }
-
-    .logo-badge {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.6rem; font-weight: 500;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: #fff; background: #1a5fa8;
-      padding: 3px 8px; border-radius: 20px;
-      margin-left: 10px; align-self: flex-start; margin-top: 6px;
-    }
-
-    /* Search bar */
-    .search-container {
-      width: 100%; max-width: 580px;
-      animation: fadeUp 0.5s 0.24s ease both;
-      margin-bottom: 1.2rem;
-    }
-
-    .search-box {
-      display: flex; align-items: center;
-      background: rgba(255,255,255,0.88);
-      border: 2px solid transparent;
-      border-radius: 50px; padding: 0 18px; gap: 10px; height: 52px;
-      box-shadow: 0 4px 24px rgba(26,95,168,0.14), 0 1px 4px rgba(0,0,0,0.06);
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-    .search-box:focus-within {
-      border-color: #5b9bd5;
-      background: rgba(255,255,255,0.97);
-      box-shadow: 0 4px 32px rgba(26,95,168,0.22);
-    }
-
-    .search-icon { width:18px; height:18px; flex-shrink:0; color:#8a9ab8; }
-
-    #search-input {
-      flex: 1; border: none; outline: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem; color: #1a2a4a; background: transparent;
-    }
-    #search-input::placeholder { color: #b0bdd4; }
-
-    /* Search buttons */
-    .search-btns {
-      display: flex; gap: 10px; justify-content: center;
-      animation: fadeUp 0.5s 0.3s ease both;
-      margin-bottom: 2.4rem;
-    }
-
-    .search-btn {
-      border: none; border-radius: 50px; padding: 9px 22px;
-      font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500;
-      cursor: pointer; transition: opacity 0.15s, transform 0.15s;
-      white-space: nowrap;
-    }
-    .search-btn:hover  { opacity: 0.88; transform: scale(1.03); }
-    .search-btn:active { transform: scale(0.97); }
-    .btn-blue   { background: linear-gradient(135deg, #1a5fa8, #5b9bd5); color: #fff; }
-    .btn-yellow { background: linear-gradient(135deg, #d4a800, #f5d000); color: #1a2a00; }
-
-    /* Quick links */
-    .shortcuts {
-      display: flex; gap: 18px; flex-wrap: wrap; justify-content: center;
-      max-width: 680px;
-      animation: fadeUp 0.5s 0.36s ease both;
-    }
-
-    .shortcut {
-      display: flex; flex-direction: column; align-items: center; gap: 7px;
-      cursor: pointer; text-decoration: none; transition: transform 0.18s;
-    }
-    .shortcut:hover { transform: translateY(-5px); }
-
-    .shortcut-icon {
-      width: 54px; height: 54px; border-radius: 16px;
-      background: rgba(255,255,255,0.82);
-      box-shadow: 0 2px 12px rgba(26,95,168,0.11);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
-      transition: box-shadow 0.18s, background 0.18s;
-    }
-    .shortcut:hover .shortcut-icon {
-      background: rgba(255,255,255,0.97);
-      box-shadow: 0 6px 22px rgba(26,95,168,0.18);
-    }
-    .shortcut-label { font-size: 0.72rem; color: #6b7a9a; font-weight: 400; }
-
-    /* Footer */
-    .footer {
-      position: fixed; bottom: 14px;
-      font-size: 0.75rem; color: #a0aec0; letter-spacing: 0.04em;
-    }
-    .footer span { color: #5b9bd5; font-weight: 500; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-</head>
-<body>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-
-  <div class="page">
-
-    <div id="clock">00:00</div>
-    <div id="date-label">Wednesday</div>
-
-    <div class="logo-wrap">
-      <div class="logo-text">
-        <span>P</span><span>o</span><span>t</span><span>u</span><span>z</span><span>h</span><span>n</span><span>o</span>
-      </div>
-      <div class="logo-badge">Browser</div>
-    </div>
-
-    <div class="search-container">
-      <div class="search-box">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input id="search-input" type="text" placeholder="Search the web or enter a URL..." autocomplete="off" />
-      </div>
-    </div>
-
-    <div class="search-btns">
-      <button class="search-btn btn-blue"   onclick="doSearch()">Potuzhno Search</button>
-      <button class="search-btn btn-yellow" onclick="doLucky()">I'm Feeling Lucky</button>
-    </div>
-
-    <div class="shortcuts">
-      <a class="shortcut" href="https://youtube.com">
-        <div class="shortcut-icon">▶️</div>
-        <span class="shortcut-label">YouTube</span>
-      </a>
-      <a class="shortcut" href="https://github.com">
-        <div class="shortcut-icon">🐙</div>
-        <span class="shortcut-label">GitHub</span>
-      </a>
-      <a class="shortcut" href="https://gmail.com">
-        <div class="shortcut-icon">✉️</div>
-        <span class="shortcut-label">Gmail</span>
-      </a>
-      <a class="shortcut" href="https://twitter.com">
-        <div class="shortcut-icon">🐦</div>
-        <span class="shortcut-label">Twitter</span>
-      </a>
-      <a class="shortcut" href="https://reddit.com">
-        <div class="shortcut-icon">🟠</div>
-        <span class="shortcut-label">Reddit</span>
-      </a>
-      <a class="shortcut" href="https://stackoverflow.com">
-        <div class="shortcut-icon">💻</div>
-        <span class="shortcut-label">Stack Overflow</span>
-      </a>
-      <a class="shortcut" href="https://wikipedia.org">
-        <div class="shortcut-icon">📖</div>
-        <span class="shortcut-label">Wikipedia</span>
-      </a>
-      <a class="shortcut" href="https://twitch.tv">
-        <div class="shortcut-icon">🎮</div>
-        <span class="shortcut-label">Twitch</span>
-      </a>
-    </div>
-
-  </div>
-
-  <div class="footer">Powered by <span>Potuzhno Browser</span> &mdash; Your web, your way.</div>
-
-  <script>
-    // Clock
-    function updateClock() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('clock').textContent = h + ':' + m;
-      const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      document.getElementById('date-label').textContent =
-        days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate();
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    // Search
-    function doSearch() {
-      const q = document.getElementById('search-input').value.trim();
-      if (!q) return;
-      if (/^(https?:\/\/)/.test(q)) { window.location.href = q; return; }
-      if (/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/.test(q) && !q.includes(' ')) {
-        window.location.href = 'https://' + q; return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Potuzhno Browser — New Tab</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(q);
-    }
 
-    function doLucky() {
-      const q = document.getElementById('search-input').value.trim();
-      if (!q) return;
-      window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(q) + '&btnI=1';
-    }
+      html,
+      body {
+        height: 100%;
+        font-family: "DM Sans", sans-serif;
+        overflow: hidden;
+      }
 
-    document.getElementById('search-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') doSearch();
-    });
+      body {
+        background:
+          radial-gradient(
+            ellipse at 20% 80%,
+            rgba(245, 208, 0, 0.28) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 80% 10%,
+            rgba(26, 95, 168, 0.22) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(91, 155, 213, 0.12) 0%,
+            transparent 70%
+          ),
+          linear-gradient(
+            160deg,
+            #ddeeff 0%,
+            #c8dffa 30%,
+            #f0e8b0 70%,
+            #f5e060 100%
+          );
+      }
 
-    window.addEventListener('load', () => {
-      document.getElementById('search-input').focus();
-    });
-  </script>
-</body>
+      /* Decorative orbs */
+      .orb {
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .orb-1 {
+        width: 420px;
+        height: 420px;
+        top: -120px;
+        right: -100px;
+        background: radial-gradient(
+          circle,
+          rgba(26, 95, 168, 0.16),
+          transparent 70%
+        );
+      }
+      .orb-2 {
+        width: 340px;
+        height: 340px;
+        bottom: -80px;
+        left: -80px;
+        background: radial-gradient(
+          circle,
+          rgba(245, 208, 0, 0.26),
+          transparent 70%
+        );
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        gap: 0;
+      }
+
+      /* Clock */
+      #clock {
+        font-family: "Unbounded", sans-serif;
+        font-size: clamp(3.5rem, 9vw, 6.5rem);
+        font-weight: 700;
+        letter-spacing: -3px;
+        color: #1a5fa8;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+        animation: fadeUp 0.5s ease both;
+      }
+
+      #date-label {
+        font-size: 0.9rem;
+        color: #6b7a9a;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 2.2rem;
+        animation: fadeUp 0.5s 0.08s ease both;
+      }
+
+      /* Logo */
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 1.8rem;
+        animation: fadeUp 0.5s 0.16s ease both;
+        user-select: none;
+      }
+
+      .logo-text {
+        font-family: "Unbounded", sans-serif;
+        font-size: clamp(2.2rem, 5.5vw, 4rem);
+        font-weight: 900;
+        letter-spacing: -2px;
+        line-height: 1;
+      }
+      .logo-text span:nth-child(1) {
+        color: #1a5fa8;
+      }
+      .logo-text span:nth-child(2) {
+        color: #e8a000;
+      }
+      .logo-text span:nth-child(3) {
+        color: #1a5fa8;
+      }
+      .logo-text span:nth-child(4) {
+        color: #34a853;
+      }
+      .logo-text span:nth-child(5) {
+        color: #1a5fa8;
+      }
+      .logo-text span:nth-child(6) {
+        color: #ea4335;
+      }
+      .logo-text span:nth-child(7) {
+        color: #e8a000;
+      }
+      .logo-text span:nth-child(8) {
+        color: #1a5fa8;
+      }
+
+      .logo-badge {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.6rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #fff;
+        background: #1a5fa8;
+        padding: 3px 8px;
+        border-radius: 20px;
+        margin-left: 10px;
+        align-self: flex-start;
+        margin-top: 6px;
+      }
+
+      /* Search bar */
+      .search-container {
+        width: 100%;
+        max-width: 580px;
+        animation: fadeUp 0.5s 0.24s ease both;
+        margin-bottom: 1.2rem;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.88);
+        border: 2px solid transparent;
+        border-radius: 50px;
+        padding: 0 18px;
+        gap: 10px;
+        height: 52px;
+        box-shadow:
+          0 4px 24px rgba(26, 95, 168, 0.14),
+          0 1px 4px rgba(0, 0, 0, 0.06);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+      }
+      .search-box:focus-within {
+        border-color: #5b9bd5;
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 4px 32px rgba(26, 95, 168, 0.22);
+      }
+
+      .search-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: #8a9ab8;
+      }
+
+      #search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        color: #1a2a4a;
+        background: transparent;
+      }
+      #search-input::placeholder {
+        color: #b0bdd4;
+      }
+
+      /* Search buttons */
+      .search-btns {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        animation: fadeUp 0.5s 0.3s ease both;
+        margin-bottom: 2.4rem;
+      }
+
+      .search-btn {
+        border: none;
+        border-radius: 50px;
+        padding: 9px 22px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          opacity 0.15s,
+          transform 0.15s;
+        white-space: nowrap;
+      }
+      .search-btn:hover {
+        opacity: 0.88;
+        transform: scale(1.03);
+      }
+      .search-btn:active {
+        transform: scale(0.97);
+      }
+      .btn-blue {
+        background: linear-gradient(135deg, #1a5fa8, #5b9bd5);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(26, 95, 168, 0.25);
+      }
+      .btn-yellow {
+        background: linear-gradient(135deg, #d4a800, #f5d000);
+        color: #1a2a00;
+        box-shadow: 0 2px 8px rgba(212, 168, 0, 0.3);
+      }
+      .btn-blue:hover {
+        box-shadow: 0 4px 16px rgba(26, 95, 168, 0.4);
+      }
+      .btn-yellow:hover {
+        box-shadow: 0 4px 16px rgba(212, 168, 0, 0.5);
+      }
+
+      /* Quick links */
+      .shortcuts {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 800px;
+        animation: fadeUp 0.5s 0.36s ease both;
+      }
+
+      .shortcut {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          transform 0.18s,
+          filter 0.18s;
+      }
+      .shortcut:hover {
+        transform: translateY(-8px);
+        filter: brightness(1.1);
+      }
+
+      .shortcut-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 2px 12px rgba(26, 95, 168, 0.11);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: all 0.18s;
+      }
+      .shortcut:hover .shortcut-icon {
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 8px 28px rgba(26, 95, 168, 0.25);
+        transform: rotate(5deg) scale(1.08);
+      }
+      .shortcut-label {
+        font-size: 0.72rem;
+        color: #6b7a9a;
+        font-weight: 400;
+      }
+
+      /* Footer */
+      .footer {
+        position: fixed;
+        bottom: 14px;
+        font-size: 0.75rem;
+        color: #a0aec0;
+        letter-spacing: 0.04em;
+      }
+      .footer span {
+        color: #5b9bd5;
+        font-weight: 500;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="page">
+      <div id="clock">00:00</div>
+      <div id="date-label">Wednesday</div>
+
+      <div class="logo-wrap">
+        <div class="logo-text">
+          <span>P</span><span>o</span><span>t</span><span>u</span><span>z</span
+          ><span>h</span><span>n</span><span>o</span>
+        </div>
+        <div class="logo-badge">Browser</div>
+      </div>
+
+      <div class="search-container">
+        <div class="search-box">
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search the web or enter a URL..."
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="search-btns">
+        <button class="search-btn btn-blue" onclick="doSearch()">
+          🔍 Search
+        </button>
+        <button class="search-btn btn-yellow" onclick="doLucky()">
+          🍀 Lucky
+        </button>
+      </div>
+
+      <div class="shortcuts">
+        <a class="shortcut" href="https://youtube.com" target="_blank">
+          <div class="shortcut-icon">▶️</div>
+          <span class="shortcut-label">YouTube</span>
+        </a>
+        <a class="shortcut" href="https://github.com" target="_blank">
+          <div class="shortcut-icon">🐙</div>
+          <span class="shortcut-label">GitHub</span>
+        </a>
+        <a class="shortcut" href="https://gmail.com" target="_blank">
+          <div class="shortcut-icon">✉️</div>
+          <span class="shortcut-label">Gmail</span>
+        </a>
+        <a class="shortcut" href="https://twitter.com" target="_blank">
+          <div class="shortcut-icon">𝕏</div>
+          <span class="shortcut-label">Twitter</span>
+        </a>
+        <a class="shortcut" href="https://reddit.com" target="_blank">
+          <div class="shortcut-icon">🟠</div>
+          <span class="shortcut-label">Reddit</span>
+        </a>
+        <a class="shortcut" href="https://stackoverflow.com" target="_blank">
+          <div class="shortcut-icon">💻</div>
+          <span class="shortcut-label">Stack Overflow</span>
+        </a>
+        <a class="shortcut" href="https://wikipedia.org" target="_blank">
+          <div class="shortcut-icon">📖</div>
+          <span class="shortcut-label">Wikipedia</span>
+        </a>
+        <a class="shortcut" href="https://twitch.tv" target="_blank">
+          <div class="shortcut-icon">🎮</div>
+          <span class="shortcut-label">Twitch</span>
+        </a>
+        <a class="shortcut" href="https://weather.com" target="_blank">
+          <div class="shortcut-icon">🌦️</div>
+          <span class="shortcut-label">Weather</span>
+        </a>
+        <a class="shortcut" href="https://news.ycombinator.com" target="_blank">
+          <div class="shortcut-icon">📰</div>
+          <span class="shortcut-label">HackerNews</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer">
+      Powered by <span>Potuzhno Browser</span> &mdash; Your web, your way.
+    </div>
+
+    <script>
+      // Clock
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, "0");
+        const m = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("clock").textContent = h + ":" + m;
+        const days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        document.getElementById("date-label").textContent =
+          days[now.getDay()] +
+          ", " +
+          months[now.getMonth()] +
+          " " +
+          now.getDate();
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Search
+      function doSearch() {
+        const q = document.getElementById("search-input").value.trim();
+        if (!q) return;
+        if (/^(https?:\/\/)/.test(q)) {
+          window.location.href = q;
+          return;
+        }
+        if (
+          /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/.test(q) &&
+          !q.includes(" ")
+        ) {
+          window.location.href = "https://" + q;
+          return;
+        }
+        window.location.href =
+          "https://www.google.com/search?q=" + encodeURIComponent(q);
+      }
+
+      function doLucky() {
+        const q = document.getElementById("search-input").value.trim();
+        if (!q) return;
+        window.location.href =
+          "https://www.google.com/search?q=" +
+          encodeURIComponent(q) +
+          "&btnI=1";
+      }
+
+      document
+        .getElementById("search-input")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter") doSearch();
+        });
+
+      window.addEventListener("load", () => {
+        document.getElementById("search-input").focus();
+      });
+    </script>
+  </body>
 </html>

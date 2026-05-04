@@ -1,103 +1,238 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="styles.css">
-  <title>Potuzhno Browser</title>
-</head>
-<body>
-
-  <!-- TABS BAR -->
-  <div id="titlebar">
-    <div id="tabs-container"></div>
-    <button class="icon-btn" id="new-tab-btn" title="New tab (Ctrl+T)" onclick="newTab()">+</button>
-    <button class="icon-btn" id="incognito-btn" title="New incognito window (Ctrl+Shift+N)" onclick="openIncognito()">&#128373;</button>
-  </div>
-
-  <!-- TOOLBAR -->
-  <div id="toolbar">
-    <button class="nav-btn" id="back"    title="Back (Alt+Left)"     onclick="navBack()">&#9664;</button>
-    <button class="nav-btn" id="forward" title="Forward (Alt+Right)"  onclick="navForward()">&#9654;</button>
-    <button class="nav-btn" id="reload"  title="Reload (F5)"          onclick="navReload()">&#8635;</button>
-
-    <div id="engine-wrap" title="Search engine">
-      <img id="engine-icon" src="" alt="" onerror="this.style.display='none'" />
-      <select id="engine-select" onchange="setEngine(this.value)"></select>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Potuzhno Browser</title>
+  </head>
+  <body>
+    <!-- TABS BAR -->
+    <div id="titlebar">
+      <div id="tabs-container"></div>
+      <button
+        class="icon-btn"
+        id="new-tab-btn"
+        title="New tab (Ctrl+T)"
+        onclick="newTab()"
+      >
+        +
+      </button>
+      <button
+        class="icon-btn"
+        id="incognito-btn"
+        title="New incognito window (Ctrl+Shift+N)"
+        onclick="openIncognito()"
+      >
+        &#128373;
+      </button>
+      <div id="window-controls">
+        <button
+          class="window-control-btn"
+          id="minimize-btn"
+          title="Minimize"
+          onclick="window.browserAPI.windowMinimize()"
+        >
+          &#128469;
+        </button>
+        <button
+          class="window-control-btn"
+          id="maximize-btn"
+          title="Maximize"
+          onclick="window.browserAPI.windowMaximize()"
+        >
+          &#x2610;
+        </button>
+        <button
+          class="window-control-btn"
+          id="close-btn"
+          title="Close"
+          onclick="window.browserAPI.windowClose()"
+        >
+          &#10005;
+        </button>
+      </div>
     </div>
 
-    <div id="urlbar-wrap">
-      <span id="lock-icon">&#128274;</span>
-      <input id="urlbar" type="text" placeholder="Search or enter URL..." spellcheck="false" autocomplete="off" />
-      <span id="incognito-badge" style="display:none" title="Incognito">&#128373;</span>
-    </div>
+    <!-- TOOLBAR -->
+    <div id="toolbar">
+      <button
+        class="nav-btn"
+        id="back"
+        title="Back (Alt+Left)"
+        onclick="navBack()"
+      >
+        &#9664;
+      </button>
+      <button
+        class="nav-btn"
+        id="forward"
+        title="Forward (Alt+Right)"
+        onclick="navForward()"
+      >
+        &#9654;
+      </button>
+      <button
+        class="nav-btn"
+        id="reload"
+        title="Reload (F5)"
+        onclick="navReload()"
+      >
+        &#8635;
+      </button>
 
-    <button class="nav-btn" id="bookmark-add-btn" title="Bookmark (Ctrl+D)"   onclick="toggleBookmarkThis()">&#9733;</button>
-    <button class="nav-btn" id="bookmarks-btn"    title="Bookmarks (Ctrl+B)"  onclick="togglePanel('bookmarks')">&#128196;</button>
-    <button class="nav-btn" id="history-btn"      title="History (Ctrl+H)"    onclick="togglePanel('history')">&#128336;</button>
-    <button class="nav-btn" id="downloads-btn"    title="Downloads (Ctrl+J)"  onclick="togglePanel('downloads')">&#8681;</button>
-    <button class="nav-btn" id="devtools-btn"     title="DevTools (F12)"      onclick="openDevTools()">&#128295;</button>
-  </div>
-
-  <!-- BOOKMARKS BAR -->
-  <div id="bookmarks-bar"></div>
-
-  <!-- MAIN CONTENT -->
-  <div id="main">
-    <div id="webviews"></div>
-
-    <!-- SIDE PANEL -->
-    <div id="side-panel" class="closed">
-      <div id="panel-header">
-        <span id="panel-title">Panel</span>
-        <span class="panel-close" onclick="closePanel()">&#10005;</span>
+      <div id="engine-wrap" title="Search engine">
+        <img
+          id="engine-icon"
+          src=""
+          alt=""
+          onerror="this.style.display = 'none'"
+        />
+        <select id="engine-select" onchange="setEngine(this.value)"></select>
       </div>
 
-      <div id="pane-history" class="pane">
-        <input class="panel-search" id="history-search" placeholder="Search history..." oninput="renderHistory()" />
-        <div id="history-list"></div>
-        <div class="panel-footer">
-          <button class="danger-btn" onclick="clearHistory()">Clear all history</button>
+      <div id="urlbar-wrap">
+        <span id="lock-icon">&#128274;</span>
+        <input
+          id="urlbar"
+          type="text"
+          placeholder="Search or enter URL..."
+          spellcheck="false"
+          autocomplete="off"
+        />
+        <span id="incognito-badge" style="display: none" title="Incognito"
+          >&#128373;</span
+        >
+      </div>
+
+      <button
+        class="nav-btn"
+        id="bookmark-add-btn"
+        title="Bookmark (Ctrl+D)"
+        onclick="toggleBookmarkThis()"
+      >
+        &#9733;
+      </button>
+      <button
+        class="nav-btn"
+        id="bookmarks-btn"
+        title="Bookmarks (Ctrl+B)"
+        onclick="togglePanel('bookmarks')"
+      >
+        &#128196;
+      </button>
+      <button
+        class="nav-btn"
+        id="history-btn"
+        title="History (Ctrl+H)"
+        onclick="togglePanel('history')"
+      >
+        &#128336;
+      </button>
+      <button
+        class="nav-btn"
+        id="downloads-btn"
+        title="Downloads (Ctrl+J)"
+        onclick="togglePanel('downloads')"
+      >
+        &#8681;
+      </button>
+      <button
+        class="nav-btn"
+        id="devtools-btn"
+        title="DevTools (F12)"
+        onclick="openDevTools()"
+      >
+        &#128295;
+      </button>
+    </div>
+
+    <!-- BOOKMARKS BAR -->
+    <div id="bookmarks-bar"></div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main">
+      <div id="webviews"></div>
+
+      <!-- SIDE PANEL -->
+      <div id="side-panel" class="closed">
+        <div id="panel-header">
+          <span id="panel-title">Panel</span>
+          <span class="panel-close" onclick="closePanel()">&#10005;</span>
+        </div>
+
+        <div id="pane-history" class="pane">
+          <input
+            class="panel-search"
+            id="history-search"
+            placeholder="Search history..."
+            oninput="renderHistory()"
+          />
+          <div id="history-list"></div>
+          <div class="panel-footer">
+            <button class="danger-btn" onclick="clearHistory()">
+              Clear all history
+            </button>
+          </div>
+        </div>
+
+        <div id="pane-bookmarks" class="pane" style="display: none">
+          <input
+            class="panel-search"
+            id="bookmarks-search"
+            placeholder="Search bookmarks..."
+            oninput="renderBookmarks()"
+          />
+          <div id="bookmarks-list"></div>
+        </div>
+
+        <div id="pane-downloads" class="pane" style="display: none">
+          <div id="downloads-list"></div>
+          <div class="panel-footer">
+            <button
+              class="ghost-btn"
+              onclick="window.browserAPI.showDownloadsFolder()"
+            >
+              Open downloads folder
+            </button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div id="pane-bookmarks" class="pane" style="display:none">
-        <input class="panel-search" id="bookmarks-search" placeholder="Search bookmarks..." oninput="renderBookmarks()" />
-        <div id="bookmarks-list"></div>
+    <!-- CONTEXT MENU -->
+    <div id="ctx-menu">
+      <div class="ctx-item" onclick="ctxAction('back')">&#9664; Back</div>
+      <div class="ctx-item" onclick="ctxAction('forward')">&#9654; Forward</div>
+      <div class="ctx-item" onclick="ctxAction('reload')">&#8635; Reload</div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item" onclick="ctxAction('bookmark')">
+        &#9733; Bookmark this page
       </div>
-
-      <div id="pane-downloads" class="pane" style="display:none">
-        <div id="downloads-list"></div>
-        <div class="panel-footer">
-          <button class="ghost-btn" onclick="window.browserAPI.showDownloadsFolder()">Open downloads folder</button>
-        </div>
+      <div class="ctx-item" onclick="ctxAction('devtools')">
+        &#128295; Inspect (DevTools)
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item" onclick="ctxAction('newtab')">+ New Tab</div>
+      <div class="ctx-item" onclick="ctxAction('incognito')">
+        &#128373; New Incognito Window
+      </div>
+      <div class="ctx-sep"></div>
+      <div class="ctx-item" onclick="ctxAction('zoomin')">+ Zoom In</div>
+      <div class="ctx-item" onclick="ctxAction('zoomout')">
+        &#8722; Zoom Out
+      </div>
+      <div class="ctx-item" onclick="ctxAction('zoomreset')">
+        &#8634; Reset Zoom
       </div>
     </div>
-  </div>
 
-  <!-- CONTEXT MENU -->
-  <div id="ctx-menu">
-    <div class="ctx-item" onclick="ctxAction('back')">&#9664; Back</div>
-    <div class="ctx-item" onclick="ctxAction('forward')">&#9654; Forward</div>
-    <div class="ctx-item" onclick="ctxAction('reload')">&#8635; Reload</div>
-    <div class="ctx-sep"></div>
-    <div class="ctx-item" onclick="ctxAction('bookmark')">&#9733; Bookmark this page</div>
-    <div class="ctx-item" onclick="ctxAction('devtools')">&#128295; Inspect (DevTools)</div>
-    <div class="ctx-sep"></div>
-    <div class="ctx-item" onclick="ctxAction('newtab')">+ New Tab</div>
-    <div class="ctx-item" onclick="ctxAction('incognito')">&#128373; New Incognito Window</div>
-    <div class="ctx-sep"></div>
-    <div class="ctx-item" onclick="ctxAction('zoomin')">+ Zoom In</div>
-    <div class="ctx-item" onclick="ctxAction('zoomout')">&#8722; Zoom Out</div>
-    <div class="ctx-item" onclick="ctxAction('zoomreset')">&#8634; Reset Zoom</div>
-  </div>
+    <!-- STATUS BAR -->
+    <div id="statusbar">
+      <span id="status-text">Ready</span>
+      <span id="zoom-indicator">100%</span>
+      <span>Potuzhno Browser v2.0</span>
+    </div>
 
-  <!-- STATUS BAR -->
-  <div id="statusbar">
-    <span id="status-text">Ready</span>
-    <span id="zoom-indicator">100%</span>
-    <span>Potuzhno Browser v2.0</span>
-  </div>
-
-  <script src="renderer.js"></script>
-</body>
+    <script src="renderer.js"></script>
+  </body>
 </html>
