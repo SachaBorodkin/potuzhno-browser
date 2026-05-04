@@ -87,30 +87,30 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: 1rem;
+        justify-content: flex-start;
+        padding: 60px 1rem 1rem;
         gap: 0;
       }
 
       /* Clock */
       #clock {
         font-family: "Unbounded", sans-serif;
-        font-size: clamp(3.5rem, 9vw, 6.5rem);
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
         font-weight: 700;
-        letter-spacing: -3px;
+        letter-spacing: -2px;
         color: #1a5fa8;
         line-height: 1;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0;
         animation: fadeUp 0.5s ease both;
       }
 
       #date-label {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         color: #6b7a9a;
         font-weight: 400;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        margin-bottom: 2.2rem;
+        margin-bottom: 40px;
         animation: fadeUp 0.5s 0.08s ease both;
       }
 
@@ -119,16 +119,16 @@
         display: flex;
         align-items: center;
         gap: 0;
-        margin-bottom: 1.8rem;
+        margin-bottom: 20px;
         animation: fadeUp 0.5s 0.16s ease both;
         user-select: none;
       }
 
       .logo-text {
         font-family: "Unbounded", sans-serif;
-        font-size: clamp(2.2rem, 5.5vw, 4rem);
+        font-size: clamp(1.8rem, 4vw, 3rem);
         font-weight: 900;
-        letter-spacing: -2px;
+        letter-spacing: -1.5px;
         line-height: 1;
       }
       .logo-text span:nth-child(1) {
@@ -174,9 +174,13 @@
       /* Search bar */
       .search-container {
         width: 100%;
-        max-width: 580px;
+        max-width: 900px;
         animation: fadeUp 0.5s 0.24s ease both;
-        margin-bottom: 1.2rem;
+        margin-bottom: 2rem;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .search-box {
@@ -185,9 +189,10 @@
         background: rgba(255, 255, 255, 0.88);
         border: 2px solid transparent;
         border-radius: 50px;
-        padding: 0 18px;
-        gap: 10px;
-        height: 52px;
+        padding: 0 28px;
+        gap: 16px;
+        height: 72px;
+        width: 100%;
         box-shadow:
           0 4px 24px rgba(26, 95, 168, 0.14),
           0 1px 4px rgba(0, 0, 0, 0.06);
@@ -199,12 +204,12 @@
       .search-box:focus-within {
         border-color: #5b9bd5;
         background: rgba(255, 255, 255, 0.97);
-        box-shadow: 0 4px 32px rgba(26, 95, 168, 0.22);
+        box-shadow: 0 8px 48px rgba(26, 95, 168, 0.28);
       }
 
       .search-icon {
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
         flex-shrink: 0;
         color: #8a9ab8;
       }
@@ -214,7 +219,7 @@
         border: none;
         outline: none;
         font-family: "DM Sans", sans-serif;
-        font-size: 1rem;
+        font-size: 1.2rem;
         color: #1a2a4a;
         background: transparent;
       }
@@ -224,7 +229,7 @@
 
       /* Search buttons */
       .search-btns {
-        display: flex;
+        display: none;
         gap: 10px;
         justify-content: center;
         animation: fadeUp 0.5s 0.3s ease both;
@@ -270,7 +275,7 @@
 
       /* Quick links */
       .shortcuts {
-        display: flex;
+        display: none;
         gap: 18px;
         flex-wrap: wrap;
         justify-content: center;
@@ -320,10 +325,13 @@
       /* Footer */
       .footer {
         position: fixed;
-        bottom: 14px;
-        font-size: 0.75rem;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        font-size: 0.8rem;
         color: #a0aec0;
         letter-spacing: 0.04em;
+        text-align: center;
       }
       .footer span {
         color: #5b9bd5;
